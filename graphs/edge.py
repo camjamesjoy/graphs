@@ -7,9 +7,10 @@ class Edge:
         - end -> Node
         - weight -> int
     """
-    def __init__(self, end=None, weight=0):
-        self.end=end
-        self.weight=weight
+    def __init__(self, start, end, weight=0):
+        self.end = end
+        self.start = start
+        self.weight = weight
 
     def __repr__(self):
         if self.weight == 0:
@@ -18,7 +19,7 @@ class Edge:
 
     def __eq__(self, other):
 
-        # try:
-        return self.end == other.end and self.weight == other.weight
-        # except AttributeError:
-        #     return self.end == other
+        try:
+            return self.end == other.end and self.weight == other.weight
+        except AttributeError:
+            return False
