@@ -24,6 +24,8 @@ class Graph:
         """
         start = path[0]
         end = path[1]
+        if len(path) == 3:
+            weight = path[2]
 
         start_node = Node(start)
         end_node = Node(end)
@@ -68,3 +70,23 @@ class Graph:
             else:
                 print(f"{path} does not have a weight this function is for weighted graphs only")
                 continue
+
+    def modify_weight(self, edge, new_weight):
+        """
+        accepts a list representing an edge and searches for that edge in the
+        graph. If the edge is in the graph, all edges with the values represented
+        by the list have their weight value updated to new_weight
+
+        edge: list of the format ["start","end",weight]. Note that the start and
+              end do not need to be str and weight does not need to be int. The
+              weight should be the old weight not the new weight that it will be
+              set to
+        new_weight: int representing weight
+        """
+        edge = Edge(edge[0], edge[1], edge[2])
+        if edge.start not in self.graph:
+            print(f"{edge} is not in graph cannot modify its weight")
+        possible_edges = self.graph[edge.start]
+        for possible_edge in possible_edges:
+            if edge == possible_edge:
+                possible_edge.weight = new_weight
