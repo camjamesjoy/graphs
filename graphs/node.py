@@ -7,6 +7,7 @@ class Node:
     """
     def __init__(self, name="", edges=[]):
         self.name = name
+        self.visited = False
 
     def __repr__(self):
         return(f"{self.name}")

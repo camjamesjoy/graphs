@@ -4,9 +4,20 @@ from .edge import Edge
 
 class Graph:
 
-
     def __init__(self):
         self.graph = {}
+
+    def reset_visited(self):
+        """
+        after doing a search algorithm often times nodes will be marked as
+        visited. This marks all nodes as not visited, typically done before
+        or after a search is done
+        """
+        for node in self.graph.keys():
+            node.visited = False
+            for edge in self.graph[node]:
+                edge.end.visited = False
+                edge.start.visited = False
 
     def make_unweighted_from_list(self, nodes, directed=True):
         """
