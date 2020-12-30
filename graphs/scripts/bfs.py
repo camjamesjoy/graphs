@@ -21,17 +21,16 @@ def breadth_first_search(graph, start, target):
     next_nodes = Queue()
     graph.reset_visited()
     next_nodes.put([start]) # make queue of lists so we can append to paths
-    print(graph.graph)
     while not next_nodes.empty():
         path = next_nodes.get()
-        print(path)
         curr_node = path[-1]
-        if curr_node == target:
-            graph.reset_visited()
-            return path
-        for neighbor in graph.graph[curr_node]:
-            if not neighbor.start.visited:
-                next_nodes.put(path + [neighbor.end])
-                neighbor.start.visited = True
+        if curr_node.visited == False:
+            curr_node.visited = True
+            if curr_node == target:
+                graph.reset_visited()
+                return path
+            for neighbor in graph.graph[curr_node]:
+                if not neighbor.start.visited:
+                    next_nodes.put(path + [neighbor.end])
     graph.reset_visited()
     return []

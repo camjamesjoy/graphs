@@ -184,6 +184,11 @@ def test_reset_visited():
     assert compare_graphs(new_graph.graph, graph.graph) == True
     for node in graph.graph:
         node.visited = True
-
-
     assert compare_graphs(new_graph.graph, graph.graph) == False
+
+def test_add_single_node():
+    nodes = [["a"]]
+    graph = Graph()
+    graph.make_unweighted_from_list(nodes)
+    test_graph = {Node("a"):[]}
+    assert compare_graphs(test_graph, graph.graph)

@@ -50,3 +50,11 @@ def test_no_path_from_start_to_target():
     expected_path = []
     actual_path = breadth_first_search(start=Node("b"), target=Node("a"), graph=graph)
     assert actual_path == expected_path
+
+def test_cyclic_no_path_from_start_to_target():
+    graph = Graph()
+    nodes = [["a","b"],["b","a"],["c"]]
+    graph.make_unweighted_from_list(nodes)
+    expected_path = []
+    actual_path = breadth_first_search(start=Node("a"), target=Node("c"), graph=graph)
+    assert actual_path == expected_path

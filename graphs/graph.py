@@ -34,12 +34,19 @@ class Graph:
         to the graph if they are not already a part of the graph
         """
         start = path[0]
+        start_node = Node(start)
+        if len(path) == 1:
+            if start_node not in self.graph:
+                self.graph[start_node] = []
+            return
+
         end = path[1]
+        end_node = Node(end)
         if len(path) == 3:
             weight = path[2]
 
-        start_node = Node(start)
-        end_node = Node(end)
+
+
         edge = Edge(start=start_node, end=end_node, weight=weight)
 
         if start_node in self.graph:
