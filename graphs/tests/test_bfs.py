@@ -4,13 +4,6 @@ from graphs.edge import Edge
 from graphs.tests.test_utils import compare_graphs, get_default_graph
 from pytest import raises
 
-
-def get_default_graph(directed=True):
-    graph = Graph()
-    nodes = [["a","b"],["a","c"],["a","d"],["b","e"],["b","d"],["c","f"]]
-    graph.make_unweighted_from_list(nodes, directed)
-    return graph
-
 def test_find_node_in_graph():
     graph = get_default_graph()
     expected_path = ["a","c","f"]

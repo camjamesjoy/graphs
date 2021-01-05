@@ -2,6 +2,8 @@ from .node import Node
 from .edge import Edge
 from queue import Queue
 
+class CyclicGraphException(Exception):
+    pass
 
 class Graph:
 
@@ -169,3 +171,31 @@ class Graph:
                         next_nodes.put(path + [neighbor.end])
         self.reset_visited()
         return []
+
+    def topological_sort(self):
+        """
+        Returns a list that represents a topological sorting. Implemented
+        using depth first search
+
+        Based off of implementation found at wikipedia link
+        https://en.wikipedia.org/wiki/Topological_sorting
+        """
+        sorted_list = []
+        def visit(node, temp_marks):
+            if node.visited:
+                return
+            if node in temp_marks:
+                raise CyclicGraphException("Cannot perfrom topological sort on a cyclic graph")
+            temp_marks.add(node)
+            for neighbor in self.graph[node]:
+                visit(neighbor.end, temp_marks)
+            temp_marks.remove(node)
+            node.visited = True
+            sorted_list.append(node)
+
+        self.reset_visited()
+        temp_marks = set() #need to keep track of temporary marks so that we don't go in circles
+        for node in self.graph:
+            # run depth first search
+            visit(node, temp_marks)
+        return sorted_list[::-1]

@@ -20,6 +20,6 @@ class Edge:
     def __eq__(self, other):
 
         try:
-            return self.end == other.end and self.weight == other.weight
+            return self.start == other.start and self.end == other.end and self.weight == other.weight
         except AttributeError:
             return False
