@@ -1,6 +1,9 @@
 from .node import Node
 from .edge import Edge
 from queue import Queue
+from sys import maxsize
+
+INF = maxsize
 
 class CyclicGraphException(Exception):
     pass
@@ -198,4 +201,59 @@ class Graph:
         for node in self.graph:
             # run depth first search
             visit(node, temp_marks)
+        self.reset_visited()
         return sorted_list[::-1]
+
+    def dijkstra(self, start, target):
+        """
+        Given a start node and an end node finds the shortest path between the two
+        using dijkstra's algorithm
+        """
+
+        def get_smallest_unvisited_node(unvisited):
+            # gets the smallest node in unvisited
+            # this can be done faster with a priority queue
+            smallest_weight = INF
+            smallest_node = None
+            for node in unvisited:
+                if unvisited[node] < smallest_weight:
+                    smallest_node = node
+                    smallest_weight = unvisited[node]
+            return smallest_node
+
+        self.reset_visited()
+        unvisited = {} # a dictionary that keeps track of all unvisited nodes and the shortest path so far to that node
+        prev = {} # a dictionary that keeps track of a given node's previous node, where we came from to get to that node
+
+        for node in self.graph:
+            prev[node] = None
+            unvisited[node] = INF
+
+        unvisited[start] = 0
+        curr_node = start
+        curr_distance = unvisited[curr_node]
+        smallest_unvisited_node = target
+        while unvisited:
+            print(unvisited)
+            curr_node = get_smallest_unvisited_node(unvisited)
+            for neighbor in self.graph[curr_node]:
+                if neighbor.end.visited:
+                    continue
+                tentative_distance = curr_distance + neighbor.weight
+                if tentative_distance < unvisited[neighbor.end]:
+                    unvisited[neighbor.end] = tentative_distance
+                    prev[neighbor.end] = curr_node
+            curr_node.visited = True
+            del unvisited[curr_node]
+            curr_node = smallest_unvisited_node
+        
+        shortest_path = []
+        curr_node = target
+        while curr_node != start:
+            shortest_path.append(curr_node)
+            curr_node = prev[curr_node]
+        shortest_path.append(start)
+        return shortest_path[::-1]
+
+
+
