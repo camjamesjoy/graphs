@@ -20,3 +20,18 @@ class Node:
             return self.name == other.name
         except AttributeError:
             return self.name == other
+
+class PriorityNode:
+    """
+    A class that allows you to assign a priority to a Node
+    Especially useful for putting nodes into a PriorityQueue
+    """
+    def __init__(self, node, priority):
+        self.priority = priority
+        self.node = node
+
+    def __lt__(self, other):
+        return self.priority < other.priority
+
+    def __repr__(self):
+        return(f"{self.node.name} has priority {self.priority}")

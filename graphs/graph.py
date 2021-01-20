@@ -8,6 +8,9 @@ INF = maxsize
 class CyclicGraphException(Exception):
     pass
 
+class DijkstrasException(Exception):
+    pass
+
 class Graph:
 
     def __init__(self):
@@ -204,54 +207,52 @@ class Graph:
         self.reset_visited()
         return sorted_list[::-1]
 
-    def dijkstra(self, start, target):
+    def dijkstra(self, start):
         """
         Given a start node and an end node finds the shortest path between the two
         using dijkstra's algorithm
         """
-
-        def get_smallest_unvisited_node(unvisited):
-            # gets the smallest node in unvisited
-            # this can be done faster with a priority queue
-            smallest_weight = INF
-            smallest_node = None
-            for node in unvisited:
-                if unvisited[node] < smallest_weight:
-                    smallest_node = node
-                    smallest_weight = unvisited[node]
-            return smallest_node
-
-        self.reset_visited()
+        from .node import PriorityNode
+        from queue import PriorityQueue
         unvisited = {} # a dictionary that keeps track of all unvisited nodes and the shortest path so far to that node
         prev = {} # a dictionary that keeps track of a given node's previous node, where we came from to get to that node
+        distances = PriorityQueue()
 
         for node in self.graph:
-            prev[node] = None
             unvisited[node] = INF
 
+        distances.put(PriorityNode(start, 0))
         unvisited[start] = 0
-        curr_node = start
-        curr_distance = unvisited[curr_node]
-        smallest_unvisited_node = target
-        while unvisited:
-            print(unvisited)
-            curr_node = get_smallest_unvisited_node(unvisited)
+
+        while not distances.empty():
+            priority_node = distances.get()
+            curr_distance = priority_node.priority
+            curr_node = priority_node.node
             for neighbor in self.graph[curr_node]:
-                if neighbor.end.visited:
+                if neighbor.end not in unvisited:
                     continue
+                if neighbor.weight < 0:
+                    raise DijkstrasException(f"cannot run dijkstra's algorithm with negative weights. Correct outcome cannot be guaranteed")
                 tentative_distance = curr_distance + neighbor.weight
                 if tentative_distance < unvisited[neighbor.end]:
                     unvisited[neighbor.end] = tentative_distance
                     prev[neighbor.end] = curr_node
-            curr_node.visited = True
+                    new_node = PriorityNode(neighbor.end, tentative_distance)
+                    distances.put(new_node)
             del unvisited[curr_node]
-            curr_node = smallest_unvisited_node
-        
+        return prev, unvisited
+    
+    def dijkstras_with_target(self, start, target):
+        prev, _ = self.dijkstra(start)
+        print(prev)
         shortest_path = []
         curr_node = target
         while curr_node != start:
-            shortest_path.append(curr_node)
-            curr_node = prev[curr_node]
+            try:
+                shortest_path.append(curr_node)
+                curr_node = prev[curr_node]
+            except KeyError:
+                return []
         shortest_path.append(start)
         return shortest_path[::-1]
 
